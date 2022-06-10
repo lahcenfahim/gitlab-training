@@ -6,7 +6,6 @@ lint_test:
   stage: test
   before_script:
     - pip install flake8-html
-    - pip install Jinja2==3.0.1
   script:
     - flake8 --format=html --htmldir=flake_reports/
   artifacts:
