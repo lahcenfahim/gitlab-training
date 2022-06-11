@@ -12,6 +12,3 @@ lint_test:
     when: always
     paths:
       - flake_reports/
-  tags:
-    - localrunner,
-    - localshell
