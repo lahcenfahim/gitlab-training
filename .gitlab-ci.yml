@@ -8,7 +8,3 @@ lint_test:
     - pip install flake8-html
   script:
     - flake8 --format=html --htmldir=flake_reports/
-  artifacts:
-    when: always
-    paths:
-      - flake_reports/
