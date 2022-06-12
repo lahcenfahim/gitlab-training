@@ -15,6 +15,7 @@ def initDB():
     app.config.update(
         SQLALCHEMY_DATABASE_URI='sqlite:///'+DATABASE
     )
+    db.create_all()
 
 
 def truncateDB():
