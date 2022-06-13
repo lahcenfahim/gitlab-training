@@ -108,7 +108,7 @@ deploy_stage:
     - docker run --rm -e HEROKU_API_KEY=$HEROKU_STAGING_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $STAGING_APP
     - echo "App deployed to stagig server at https://$STAGING_APP.herokuapp.com/"
   only:
-    main
+    - main
 
 test_stage:
   image: alpine
@@ -118,7 +118,7 @@ test_stage:
   script:
     - curl https://$STAGING_APP.herokuapp.com/ | grep "Employee Data"  
   only:
-    main
+    - main
 
 deploy_production:
   image: docker:latest
