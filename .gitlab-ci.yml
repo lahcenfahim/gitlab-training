@@ -92,5 +92,5 @@ deploy_production:
     - docker push $HEROKU_PRODUCTION
     - docker run --rm -e HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $PRODUCTION_APP
     - echo "App deployed to production server at https://$PRODUCTION_APP.herokuapp.com/"Project - deploy to production    
-  only:
-    - main  
+  #only:
+  #  - main  
