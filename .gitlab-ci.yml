@@ -11,9 +11,11 @@ variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE/employee-image:$CI_COMMIT_SHORT_SHA
   STAGING_APP: empp-portal-staging
   PRODUCTION_APP: empp-portal-production
+
   HEROKU_STAGING: "registry.heroku.com/$STAGING_APP/web"
   HEROKU_PRODUCTION: "registry.heroku.com/$PRODUCTION_APP/web"
-  
+
+
 lint_test:
   image: python:3.8.0-slim
   stage: test
@@ -76,7 +78,7 @@ deploy_feature:
     reports:
       dotenv: deploy_feature.env
   only:
-    - /^feature-.*$/ 
+    - /^feature-.*$/
 
 test_feature:
   image: alpine
@@ -116,7 +118,7 @@ test_stage:
   before_script:
     - apk --no-cache add curl
   script:
-    - curl https://$STAGING_APP.herokuapp.com/ | grep "Employee Data"  
+    - curl https://$STAGING_APP.herokuapp.com/ | grep "Employee Data"
   only:
     - main
 
@@ -136,6 +138,6 @@ deploy_production:
     - docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
     - docker push $HEROKU_PRODUCTION
     - docker run --rm -e HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $PRODUCTION_APP
-    - echo "App deployed to production server at https://$PRODUCTION_APP.herokuapp.com/"Project - deploy to production    
+    - echo "App deployed to production server at https://$PRODUCTION_APP.herokuapp.com/"Project - deploy to production
   only:
-    - main  
+    - main
