@@ -1,13 +1,13 @@
 stages:
   - test
   - build
-  - deploy_staging
+  - deploy staging
   - automated testing
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE/employee-image:$CI_COMMIT_REF_SLUG
   STAGING_APP: empp-portal-staging
-  PRODUCTION_APP: emp-portal-production
+  PRODUCTION_APP: empp-portal-production
   HEROKU_STAGING: "registry.heroku.com/$STAGING_APP/web"
   HEROKU_PRODUCTION: "registry.heroku.com/$PRODUCTION_APP/web"
   
@@ -52,7 +52,7 @@ deploy_stage:
   image: docker:latest
   services:
     - docker:dind
-  stage: deploy_staging
+  stage: deploy staging
   before_script: 
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -70,3 +70,18 @@ test_stage:
     - apk --no-cache add curl
   script:
     - curl https://$STAGING_APP.herokuapp.com/ | grep "Employee Data"
+
+deploy_production:
+  image: docker:latest
+  services:
+    - docker:dind
+  stage: deploy production
+  before_script: 
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $IMAGE_TAG
+    - docker tag  $IMAGE_TAG $HEROKU_PRODUCTION
+    - docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
+    - docker push $HEROKU_PRODUCTION
+    - docker run --rm -e HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $PRODUCTION_APP
+    - echo "App deployed to production server at https://$PRODUCTION_APP.herokuapp.com/"Project - deploy to production    
