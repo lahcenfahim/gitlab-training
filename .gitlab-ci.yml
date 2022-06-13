@@ -51,32 +51,32 @@ build:
     - docker images
     - docker push $IMAGE_TAG
 
-  deploy_feature:
-    image: docker:latest
-    services:
-      - docker:dind
-    stage: deploy feature
-    environment:
-      name: review/$CI_COMMIT_REF_NAME
-      url: https://$CI_ENVIRONMENT_SLUG.herokuapp.com/
-    before_script: 
-      - export FEATURE_APP="$CI_ENVIRONMENT_SLUG"
-      - export HEROKU_FEATURE="registry.heroku.com/$FEATURE_APP/web"
-      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    script:
-      - echo "FEATURE_APP=$CI_ENVIRONMENT_SLUG" >> deploy_feature.env
-      - docker pull $IMAGE_TAG
-      - docker tag  $IMAGE_TAG $HEROKU_FEATURE
-      - docker run --rm -e HEROKU_API_KEY=$HEROKU_STAGING_API_KEY wingrunr21/alpine-heroku-cli create $FEATURE_APP
-      - docker login -u _ -p $HEROKU_STAGING_API_KEY registry.heroku.com
-      - docker push $HEROKU_FEATURE
-      - docker run --rm -e HEROKU_API_KEY=$HEROKU_STAGING_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $FEATURE_APP
-      - echo "App deployed to FEATURE server at https://$FEATURE_APP.herokuapp.com/"
-    artifacts:
-      reports:
-        dotenv: deploy_feature.env
-    only:
-      - /^feature-.*$/ 
+deploy_feature:
+  image: docker:latest
+  services:
+    - docker:dind
+  stage: deploy feature
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$CI_ENVIRONMENT_SLUG.herokuapp.com/
+  before_script: 
+    - export FEATURE_APP="$CI_ENVIRONMENT_SLUG"
+    - export HEROKU_FEATURE="registry.heroku.com/$FEATURE_APP/web"
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - echo "FEATURE_APP=$CI_ENVIRONMENT_SLUG" >> deploy_feature.env
+    - docker pull $IMAGE_TAG
+    - docker tag  $IMAGE_TAG $HEROKU_FEATURE
+    - docker run --rm -e HEROKU_API_KEY=$HEROKU_STAGING_API_KEY wingrunr21/alpine-heroku-cli create $FEATURE_APP
+    - docker login -u _ -p $HEROKU_STAGING_API_KEY registry.heroku.com
+    - docker push $HEROKU_FEATURE
+    - docker run --rm -e HEROKU_API_KEY=$HEROKU_STAGING_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $FEATURE_APP
+    - echo "App deployed to FEATURE server at https://$FEATURE_APP.herokuapp.com/"
+  artifacts:
+    reports:
+      dotenv: deploy_feature.env
+  only:
+    - /^feature-.*$/ 
 
 test_feature:
   image: alpine
@@ -119,7 +119,7 @@ test_stage:
     - curl https://$STAGING_APP.herokuapp.com/ | grep "Employee Data"  
   only:
     main
-    
+
 deploy_production:
   image: docker:latest
   services:
