@@ -57,7 +57,7 @@ deploy_feature:
     - docker:dind
   stage: deploy feature
   environment:
-    name: review/$CI_COMMIT_REF_NAME
+    name: correct/$CI_COMMIT_REF_NAME
     url: https://$CI_ENVIRONMENT_SLUG.herokuapp.com/
   before_script: 
     - export FEATURE_APP="$CI_ENVIRONMENT_SLUG"
