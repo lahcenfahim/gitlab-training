@@ -59,6 +59,7 @@ deploy_feature:
   environment:
     name: training/$CI_COMMIT_REF_NAME
     url: https://$CI_ENVIRONMENT_SLUG.herokuapp.com/
+    on_stop: stop_feature
   before_script: 
     - export FEATURE_APP="$CI_ENVIRONMENT_SLUG"
     - export HEROKU_FEATURE="registry.heroku.com/$FEATURE_APP/web"
