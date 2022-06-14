@@ -78,18 +78,6 @@ deploy_feature:
   only:
     - /^feature-.*$/
 
-test_feature:
-  image: alpine
-  stage: automated feature testing
-  before_script:
-    - apk --no-cache add curl
-  script:
-    - curl https://$FEATURE_APP.herokuapp.com/ | grep "Employee Data"
-  dependencies:
-    - deploy_feature
-  only:
-    - /^feature-.*$/
-
 stop_feature:
   image: docker:latest
   services:
@@ -105,7 +93,19 @@ stop_feature:
   script:
     - docker run --rm -e HEROKU_API_KEY=$HEROKU_STAGING_API_KEY wingrunr21/alpine-heroku-cli apps:destroy --app $FEATURE_APP --confirm $FEATURE_APP
     - echo "FEATURE application at server https://$FEATURE_APP.herokuapp.com/ is destroyed"
-  when: manual
+  when: manual    
+
+test_feature:
+  image: alpine
+  stage: automated feature testing
+  before_script:
+    - apk --no-cache add curl
+  script:
+    - curl https://$FEATURE_APP.herokuapp.com/ | grep "Employee Data"
+  dependencies:
+    - deploy_feature
+  only:
+    - /^feature-.*$/
 
 deploy_stage:
   image: docker:latest
