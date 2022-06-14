@@ -139,3 +139,4 @@ deploy_production:
     - echo "App deployed to production server at https://$PRODUCTION_APP.herokuapp.com/"Project - deploy to production
   only:
     - main
+  when: manual  
