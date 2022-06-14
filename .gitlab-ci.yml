@@ -65,6 +65,7 @@ deploy_feature:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - echo "FEATURE_APP=$CI_ENVIRONMENT_SLUG" >> deploy_feature.env
+    - echo $FEATURE_APP
     - docker pull $IMAGE_TAG
     - docker tag  $IMAGE_TAG $HEROKU_FEATURE
     - docker run --rm -e HEROKU_API_KEY=$HEROKU_STAGING_API_KEY wingrunr21/alpine-heroku-cli create $FEATURE_APP
