@@ -6,6 +6,7 @@ stages:
   - deploy staging
   - automated testing
   - deploy production
+  
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE/employee-image:$CI_COMMIT_SHORT_SHA
